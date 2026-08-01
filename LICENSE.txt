@@ -1,0 +1,23 @@
+AI LEAD MACHINE — n8n workflow template
+by Rook Data Tools
+=======================================================
+
+LICENSE
+
+You may use this workflow template to run lead generation for YOUR OWN
+business or for your CLIENTS' businesses (agencies: yes — deploy it for as
+many clients as you like). You may modify it freely.
+
+You may NOT resell, redistribute, sublicense, or repackage the template
+itself (or a lightly-modified copy of it) as your own product, in whole or
+in part, for free or for payment.
+
+No warranty. This template is provided "as is." You are responsible for the
+API keys, costs, and data handling in your own n8n instance, and for
+complying with the terms of the services it connects to (Apify, OpenAI,
+Google, Slack, and your lead sources).
+
+Created with AI assistance, human-curated.
+Support: reply through the platform you purchased this from.
+
+© 2026 Rook Data Tools. All rights reserved.

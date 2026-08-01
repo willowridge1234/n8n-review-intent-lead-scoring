@@ -1,0 +1,309 @@
+{
+  "id": "score-g2-capterra-switching-intent-sheets-free",
+  "name": "Score G2 and Capterra reviews for switching intent and log to Google Sheets",
+  "active": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Score G2 and Capterra reviews for switching intent and log to Google Sheets\n\n### Who's it for\nSaaS sales teams and agencies that want a repeatable way to review public competitor feedback and prioritize possible switching signals.\n\n### What it does\nEvery day this workflow fetches reviews from the G2 or Capterra Apify actor you configure, normalizes the actor's output, keeps reviews at or below your star-rating limit, removes duplicates, and caps the run at 25 reviews. An AI model scores switching intent against your criteria and gives a short reason. Every scored review is appended to Google Sheets.\n\n### How to set up\n1. Create Apify Header Auth, OpenAI-compatible Header Auth, and Google Sheets OAuth credentials.\n2. Open **Your settings (EDIT ME)** and enter the competitor URL, ICP, switching-intent criteria, and star-rating limit.\n3. In **Fetch G2 and Capterra reviews (Apify)**, replace `YOUR-USERNAME~YOUR-ACTOR` and supply that actor's own input parameters in place of `{}`.\n4. Point **Log scored reviews (Google Sheets)** at a sheet with the header row below.\n\n### Requirements\nAn n8n instance, an Apify account and suitable review actor, an OpenAI-compatible API key, and a Google account. Service and actor usage may cost money.\n\n### How to customize\nUse a different actor and its matching input parameters to change review coverage. The output normalizer is actor-agnostic and maps common review field aliases. Edit the aliases only if your actor returns different field names. Change your criteria or star-rating limit in the settings node. The free edition processes at most 25 reviews per run.\n\nSheet header row (exact):\nprocessedAt source reviewerName reviewText rating reviewDate reviewUrl competitorProductUrl switchingIntentScore reason",
+        "height": 760,
+        "width": 560
+      },
+      "id": "overview-sticky",
+      "name": "Sticky Note - Read me first",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1120, -1160]
+    },
+    {
+      "parameters": {
+        "content": "## 1. Credentials (3 required)\n\n**Apify Header Auth:** create a Header Auth credential with header name `Authorization` and a Bearer value using your Apify token.\n\n**OpenAI-compatible Header Auth:** create a separate Header Auth credential with header name `Authorization` and a Bearer value using your AI API key.\n\n**Google Sheets OAuth:** connect the Google account that owns the destination sheet.\n\nSelect each credential on its matching node after import.",
+        "width": 340,
+        "height": 300,
+        "color": 7
+      },
+      "id": "sticky-credentials",
+      "name": "Sticky Note - Credentials",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-1120, -360]
+    },
+    {
+      "parameters": {
+        "content": "## 2. Your settings\n\nOpen **Your settings (EDIT ME)** and enter:\n- the public competitor product or review URL\n- your ICP description\n- your switching-intent criteria\n- the maximum star rating to retain\n\nThe run cap is fixed at 25 in this free edition and is enforced before AI scoring.",
+        "width": 320,
+        "height": 260,
+        "color": 7
+      },
+      "id": "sticky-settings",
+      "name": "Sticky Note - Settings",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-760, -360]
+    },
+    {
+      "parameters": {
+        "content": "## 3. Review source (Apify)\n\nIn **Fetch G2 and Capterra reviews (Apify)**, replace `YOUR-USERNAME~YOUR-ACTOR` with the actor ID in `username~actor-name` format. Replace the empty `{}` body with that actor's own documented input parameters.\n\nThe workflow can use any suitable actor when you supply that actor's required input. The input body is not universal.\n\nThe output normalizer is actor-agnostic: it maps common review aliases, removes duplicate reviewer/text pairs, keeps reviews within the configured star limit, and stops at 25.",
+        "width": 400,
+        "height": 310,
+        "color": 7
+      },
+      "id": "sticky-source",
+      "name": "Sticky Note - Review source",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-400, -360]
+    },
+    {
+      "parameters": {
+        "content": "## 4. Scoring and Google Sheets\n\n**AI: score switching intent** applies your criteria to each retained review and returns a score with a short reason.\n\n**Re-attach review data** combines the result with the normalized review. **Parse AI verdict into review row** creates the final row shape.\n\n**Log scored reviews (Google Sheets)** appends every scored review, including low scores, to the `Reviews` tab. Use the exact header row shown in the overview note.",
+        "width": 500,
+        "height": 300,
+        "color": 7
+      },
+      "id": "sticky-output",
+      "name": "Sticky Note - Scoring and Sheets",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [40, -360]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "triggerAtHour": 7
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-001",
+      "name": "Run daily at 7",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [-1080, 0]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "set-competitor-url",
+              "name": "competitorProductUrl",
+              "type": "string",
+              "value": "EDIT ME: https://www.g2.com/products/YOUR-COMPETITOR/reviews"
+            },
+            {
+              "id": "set-icp",
+              "name": "icpDescription",
+              "type": "string",
+              "value": "EDIT ME: Describe the customers you serve and the problem your product solves."
+            },
+            {
+              "id": "set-switching-criteria",
+              "name": "switchingIntentCriteria",
+              "type": "string",
+              "value": "EDIT ME: Describe what weak, moderate, and strong evidence of possible product switching means for your market."
+            },
+            {
+              "id": "set-max-reviews",
+              "name": "maxReviewsPerRun",
+              "type": "number",
+              "value": 25
+            },
+            {
+              "id": "set-max-stars",
+              "name": "maxStarRating",
+              "type": "number",
+              "value": 3
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "settings-node-001",
+      "name": "Your settings (EDIT ME)",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [-840, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/YOUR-USERNAME~YOUR-ACTOR/run-sync-get-dataset-items",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "http-apify-001",
+      "name": "Fetch G2 and Capterra reviews (Apify)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [-600, 0],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_AFTER_IMPORT",
+          "name": "Apify token (Header Auth)"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize actor output, filter by rating, remove duplicates, and cap the run.\nconst settings = $('Your settings (EDIT ME)').first().json;\nconst maxReviews = Math.min(25, Math.max(1, Number(settings.maxReviewsPerRun) || 25));\nconst maxStars = Math.min(5, Math.max(1, Number(settings.maxStarRating) || 3));\nconst seen = new Set();\nconst out = [];\nfor (const item of $input.all()) {\n  const j = item.json ?? {};\n  if (j.error) continue;\n  const rating = Number(j.rating ?? j.stars ?? j.score ?? j.overallRating ?? 0);\n  if (!rating || rating > maxStars) continue;\n  const review = {\n    source: j.source ?? j.site ?? (String(j.url ?? j.reviewUrl ?? '').toLowerCase().includes('capterra') ? 'Capterra' : 'G2'),\n    reviewerName: j.reviewerName ?? j.author ?? j.user ?? j.reviewerFullName ?? 'Anonymous reviewer',\n    reviewText: j.reviewText ?? j.text ?? j.comment ?? j.reviewBody ?? '',\n    rating,\n    reviewDate: j.reviewDate ?? j.date ?? j.publishedAt ?? '',\n    reviewUrl: j.reviewUrl ?? j.url ?? j.permalink ?? '',\n    competitorProductUrl: settings.competitorProductUrl,\n    icpDescription: settings.icpDescription\n  };\n  const key = [review.reviewerName, review.reviewText].join('|').toLowerCase();\n  if (seen.has(key)) continue;\n  seen.add(key);\n  out.push({ json: review });\n  if (out.length >= maxReviews) break;\n}\nif (out.length === 0) return [{ json: { _empty: true, note: 'No reviews matched the star-rating limit this run.' } }];\nreturn out;"
+      },
+      "id": "code-normalize-001",
+      "name": "Normalize, filter and dedupe reviews",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [-360, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-notempty",
+              "leftValue": "={{ $json._empty }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        }
+      },
+      "id": "if-notempty-001",
+      "name": "Any reviews to score?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [-120, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ model: 'gpt-4o-mini', response_format: { type: 'json_object' }, messages: [ { role: 'system', content: 'Apply the user-provided switching-intent criteria to this review. Return a conservative score from 1 to 10 and one concise reason. Respond with strict JSON only: {\\\"score\\\": <int 1-10>, \\\"reason\\\": \\\"<one sentence>\\\"}' }, { role: 'user', content: 'USER CRITERIA: ' + $('Your settings (EDIT ME)').first().json.switchingIntentCriteria + '\\n\\nSELLER CONTEXT: ' + $json.icpDescription + '\\n\\nCOMPETITOR PRODUCT: ' + $json.competitorProductUrl + '\\n\\nREVIEW: ' + JSON.stringify({ source: $json.source, rating: $json.rating, text: $json.reviewText }) } ] }) }}",
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "http-openai-001",
+      "name": "AI: score switching intent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [120, -100],
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "REPLACE_AFTER_IMPORT",
+          "name": "OpenAI API (Header Auth)"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "merge-001",
+      "name": "Re-attach review data",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [360, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Parse the AI response and create the final Google Sheets row.\nconst rows = [];\nfor (const item of $input.all()) {\n  const j = item.json ?? {};\n  let verdict = { score: 0, reason: 'AI call failed - inspect the execution log' };\n  try {\n    const content = j.choices?.[0]?.message?.content;\n    if (content) verdict = JSON.parse(content);\n  } catch (error) {\n    verdict = { score: 0, reason: 'AI returned unparseable output - inspect the execution log' };\n  }\n  rows.push({ json: {\n    processedAt: new Date().toISOString(),\n    source: String(j.source ?? ''),\n    reviewerName: String(j.reviewerName ?? 'Anonymous reviewer'),\n    reviewText: String(j.reviewText ?? ''),\n    rating: j.rating ?? '',\n    reviewDate: String(j.reviewDate ?? ''),\n    reviewUrl: String(j.reviewUrl ?? ''),\n    competitorProductUrl: String(j.competitorProductUrl ?? ''),\n    switchingIntentScore: Math.min(10, Math.max(0, Number(verdict.score) || 0)),\n    reason: String(verdict.reason ?? '')\n  } });\n}\nreturn rows;"
+      },
+      "id": "code-parse-001",
+      "name": "Parse AI verdict into review row",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [600, 0]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "url",
+          "value": "PASTE_YOUR_GOOGLE_SHEET_URL_HERE"
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Reviews"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "options": {}
+        },
+        "options": {}
+      },
+      "id": "gsheets-001",
+      "name": "Log scored reviews (Google Sheets)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [840, 0],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "REPLACE_AFTER_IMPORT",
+          "name": "Google Sheets account"
+        }
+      },
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Run daily at 7": {
+      "main": [[{"node": "Your settings (EDIT ME)", "type": "main", "index": 0}]]
+    },
+    "Your settings (EDIT ME)": {
+      "main": [[{"node": "Fetch G2 and Capterra reviews (Apify)", "type": "main", "index": 0}]]
+    },
+    "Fetch G2 and Capterra reviews (Apify)": {
+      "main": [[{"node": "Normalize, filter and dedupe reviews", "type": "main", "index": 0}]]
+    },
+    "Normalize, filter and dedupe reviews": {
+      "main": [[{"node": "Any reviews to score?", "type": "main", "index": 0}]]
+    },
+    "Any reviews to score?": {
+      "main": [[{"node": "AI: score switching intent", "type": "main", "index": 0}, {"node": "Re-attach review data", "type": "main", "index": 1}], []]
+    },
+    "AI: score switching intent": {
+      "main": [[{"node": "Re-attach review data", "type": "main", "index": 0}]]
+    },
+    "Re-attach review data": {
+      "main": [[{"node": "Parse AI verdict into review row", "type": "main", "index": 0}]]
+    },
+    "Parse AI verdict into review row": {
+      "main": [[{"node": "Log scored reviews (Google Sheets)", "type": "main", "index": 0}]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  },
+  "pinData": {}
+}
