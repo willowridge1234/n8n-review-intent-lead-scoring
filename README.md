@@ -52,7 +52,7 @@ The output normalizer is actor-agnostic. It maps common review field aliases wit
 
 ## Paid edition
 
-The [Competitive Intel Pack paid edition](https://willowridge7.gumroad.com/l/n8n-competitive-intel-pack) adds the Pipedrive delivery workflow and the buyer setup package. This free workflow remains fully usable without it.
+The [Competitive Intel Pack paid edition](https://willowridge7.gumroad.com/l/competitive-intel-pack-n8n) adds the Pipedrive delivery workflow and the buyer setup package. This free workflow remains fully usable without it.
 
 ## Licence
 
