@@ -65,3 +65,12 @@ Free to use and modify for your own business or your clients' businesses, includ
 This repository was published recently. It has no users, no reviews, and no results to claim. Nothing here is a customer-success or performance claim; inspect the workflow and judge it on what it does.
 
 Built by [Rook Data Tools](https://apify.com/rook-data-tools).
+
+## Related
+
+Other free workflows and guides we publish:
+
+- [n8n-ai-lead-scoring](https://github.com/willowridge1234/n8n-ai-lead-scoring) — Free workflow — score scraped leads against your ICP, log to Google Sheets
+- [n8n-tradeshow-exhibitor-lead-scoring](https://github.com/willowridge1234/n8n-tradeshow-exhibitor-lead-scoring) — Free workflow — score trade-show exhibitors against your ICP
+- [n8n-lead-scoring-guide](https://github.com/willowridge1234/n8n-lead-scoring-guide) — Guide — which signals predict a good lead, and how to tell if scoring works
+- [chamber-association-lead-lists](https://github.com/willowridge1234/chamber-association-lead-lists) — Guide — building B2B lead lists from chamber & association directories
